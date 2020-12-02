@@ -1,0 +1,6 @@
+##
+# Setuptools-scm automatically includes the files in the git index
+# in the package; however, during testing, not all files may be
+# in the git index. This MANIFEST file makes sure those files get
+# included, too.
+graft src
