@@ -80,8 +80,6 @@ helm/**/charts/
 
 *.sqlite3
 .venv/*
-pyproject.toml
-poetry.lock
 mypy-html
 mypy-junit.xml
 test-results
