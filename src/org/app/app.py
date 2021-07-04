@@ -1,2 +1,2 @@
-def whatevz():
+def whatevz() -> bool:
     return True
