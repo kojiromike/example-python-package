@@ -1,0 +1,84 @@
+name: Version
+
+on:
+  push:
+    paths:
+    - src
+    branches:
+    - main
+  pull_request:
+    branches:
+    - main
+
+jobs:
+  semantic-version:
+    name: Semantic Version
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Setup Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.9'
+
+    - name: Set Up Git
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git fetch --tags
+
+    - run: pip install poetry
+
+    - id: poetry
+      run: echo "::set-output name=version::$(poetry version --short)"
+
+    - id: last-tag
+      run: echo "::set-output name=version::$(git describe --abbrev=0)"
+
+    - id: next-patch
+      run: |
+        poetry version --short '${{ steps.last-tag.outputs.version }}'
+        poetry version --short patch
+        echo "::set-output name=version::$(poetry version --short)"
+
+    - id: next-minor
+      run: |
+        poetry version --short minor
+        echo "::set-output name=version::$(poetry version --short)"
+
+    - id: next-major
+      run: |
+        poetry version major --short
+        echo "::set-output name=version::$(poetry version --short)"
+
+    - run: git checkout -- ./pyproject.toml
+
+    - run: echo "The last tag was ${{ steps.last-tag.outputs.version }}"
+    - run: echo "This pull request would tag ${{ steps.poetry.outputs.version }}"
+    - run: echo "A patch version would tag ${{ steps.next-patch.outputs.version }}"
+    - run: echo "A minor version would tag ${{ steps.next-minor.outputs.version }}"
+    - run: echo "A major version would tag ${{ steps.next-major.outputs.version }}"
+
+    - name: Check Version
+      run: |
+        if grep -qFf <(git tag) <<< '${{ steps.poetry.outputs.version }}'; then
+          echo 'This pull request targets a tag (${{ steps.poetry.outputs.version }}) that already exists.'
+          echo 'Run `poetry version [patch|minor|major]` to update the version.'
+          exit 1
+        fi
+        case '${{ steps.poetry.outputs.version }}' in
+          '${{ steps.next-patch.outputs.version }}') version_type='patch';;
+          '${{ steps.next-minor.outputs.version }}') version_type='minor';;
+          '${{ steps.next-major.outputs.version }}') version_type='major';;
+          *) printf 'This pull request targets a tag (${{ steps.next-major.outputs.version }}) '
+             echo 'that is not a patch, minor or major version.'
+             echo 'Please fix up the version to one of the versions listed above.'
+             exit 1;;
+        esac
+        echo "This pull request indicates a $version_type version."
+
+    - if: github.ref == 'refs/heads/main'
+      run: gh release create '${{ steps.poetry.outputs.version }}'
