@@ -81,4 +81,6 @@ jobs:
         echo "This pull request indicates a $version_type version."
 
     - if: github.ref == 'refs/heads/main'
-      run: gh release create '${{ steps.poetry.outputs.version }}'
+      run: |
+        git tag -m 'Automatically tagged by action ${{ steps.poetry.outputs.version }}' '${{ steps.poetry.outputs.version }}'
+        git push --tags origin '${{ steps.poetry.outputs.version }}'
