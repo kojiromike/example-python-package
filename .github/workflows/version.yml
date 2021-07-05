@@ -4,6 +4,8 @@ on:
   workflow_dispatch:
   push:
     paths:
+    - poetry.lock
+    - pyproject.toml
     - src
     branches:
     - main
