@@ -40,9 +40,9 @@ jobs:
         if: ${{ matrix.python == '3.9' }}
         run: python3 -m tox -e lint
 
-      - name: Typechecks
-        if: ${{ matrix.python == '3.9' }}
-        run: python3 -m tox -e typechecks
+      # - name: Typechecks
+      #   if: ${{ matrix.python == '3.9' }}
+      #   run: python3 -m tox -e typechecks
 
       - name: Test
         run: python3 -m tox -e py
