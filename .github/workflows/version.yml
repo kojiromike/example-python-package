@@ -83,7 +83,11 @@ jobs:
         esac
         echo "This pull request indicates a $version_type version."
 
-    - if: github.ref == 'refs/heads/main'
+    - name: Release '${{ steps.poetry.outputs.version }}'
+      if: github.ref == 'refs/heads/main'
       run: |
         git tag -m 'Automatically tagged by action ${{ steps.poetry.outputs.version }}' '${{ steps.poetry.outputs.version }}'
         git push --tags origin '${{ steps.poetry.outputs.version }}'
+        # To create a release from an annotated git tag, first create one locally with git, push the tag to GitHub, then run this command.
+        poetry build
+        gh release create --notes '' '${{ steps.poetry.outputs.version }}' dist/*.tar.gz dist/*.whl
