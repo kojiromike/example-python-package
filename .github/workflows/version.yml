@@ -34,7 +34,7 @@ jobs:
         git fetch --tags
 
     - name: Set Up GitHub CLI
-      run: gh auth login --with-token <<< "$GITHUB_TOKEN"
+      run: gh auth login --with-token <<< '${{ secrets.GITHUB_TOKEN }}'
 
     - run: pip install poetry
 
