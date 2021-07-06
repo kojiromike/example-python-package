@@ -4,6 +4,12 @@ on:
   workflow_dispatch:
   release:
     created:
+    published:
+    unpublished:
+    edited:
+    deleted:
+    prereleased:
+    released:
 
 
 jobs:
@@ -12,7 +18,7 @@ jobs:
     strategy:
       fail-fast: true
     steps:
-    - run: echo 'created release'
+    - run: printf '%s\n' '${{ github.event }}'
 
     # - uses: actions/checkout@v2
 

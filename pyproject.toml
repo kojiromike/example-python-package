@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "example-python-package"
-version = "0.1.6"
+version = "0.1.7"
 description = "An example Python package with Poetry and autoreleasing Github Actions"
 authors = ["Michael A. Smith <michael@smith-li.com>"]
 license = "Apache 2.0"
