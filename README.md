@@ -3,7 +3,7 @@
 
 ## Automatic Releasing
 
-### Pull Requests and Semantic Versioning
+### Conventional Pull Requests -> Semantic Versioning
 
 This project will try to stick to versions that are compatible with both [PEP 440](https://www.python.org/dev/peps/pep-0440/) and [Semantic Versioning 2.0.0](https://semver.org/) as much as possible. This means...
 
@@ -11,4 +11,18 @@ This project will try to stick to versions that are compatible with both [PEP 44
 - ...a *minor* version, as in 1.3.2 -> 1.4.0 indicates new functionality that maintains backwards compatibility for existing features.
 - ...a *patch* version, as in 1.1.2 -> 1.1.3 indicates a bugfix or other improvement with no significant api changes or new features.
 
-Deciding the semantics of a version bump are something best done by humans, and what better place to make that decision than in the pull request itself? Each pull request should have a new version of the project. When a PR is merged, that version information will be used to automatically create a build, release and deploy to pypi.
+The pull request title and body become the commit message when the pull request is squashed. The title and boy must follow [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/). [Commitizen](https://commitizen-tools.github.io/commitizen/) will ensure that. If a conventional commit is...
+
+- ... starts with `feat!`, or contains `BREAKING` in the footer, then the version bump will be *major*.
+- ... starts with `feat` and does not contain `BREAKING` in the footer, then the version bump will be *minor*.
+- ... starts with `fix`, `refactor`, `perf` or `build`, then the version bump will be *patch*.
+- ... starts with `docs`, `style`, `test` or `ci`, then no automatic version bump will be done.
+
+
+#### How does it work?
+
+When a pull request is created, GitHub Actions will run on it. The workflow will
+
+1. Check if the pull request title is conventional.
+2. Determine what the new version should be.
+3. Suggest corrections to the version of the application in the pull request, if necessary.

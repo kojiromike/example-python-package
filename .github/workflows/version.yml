@@ -1,5 +1,12 @@
 name: Version
 
+# When a pull request is created, GitHub Actions will run on it. The workflow will
+#
+# 1. Check if the pull request title is conventional.
+# 2. Determine what the new version should be.
+# 3. Suggest corrections to the version of the application in the pull request, if necessary.
+#
+
 on:
   workflow_dispatch:
   push:

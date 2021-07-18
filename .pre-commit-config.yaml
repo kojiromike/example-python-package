@@ -1,9 +1,5 @@
-# See https://pre-commit.com for more information
-# See https://pre-commit.com/hooks.html for more hooks
 repos:
-- repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v4.0.1
-  hooks:
+- hooks:
   - id: check-added-large-files
   - id: check-ast
   - id: check-builtin-literals
@@ -31,18 +27,23 @@ repos:
   - id: requirements-txt-fixer
   - id: sort-simple-yaml
   - id: trailing-whitespace
-
-- repo: https://github.com/psf/black
-  rev: 21.6b0
-  hooks:
+  repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v4.0.1
+- hooks:
   - id: black
-
-- repo: https://github.com/PyCQA/isort
-  rev: 5.9.1
-  hooks:
+  repo: https://github.com/psf/black
+  rev: 21.7b0
+- hooks:
   - id: isort
-
-- repo: https://github.com/asottile/pyupgrade
-  rev: v2.19.4
-  hooks:
+  repo: https://github.com/PyCQA/isort
+  rev: 5.9.2
+- hooks:
   - id: pyupgrade
+  repo: https://github.com/asottile/pyupgrade
+  rev: v2.21.2
+- hooks:
+  - id: commitizen
+    stages:
+    - commit-msg
+  repo: https://github.com/commitizen-tools/commitizen
+  rev: v2.17.13
