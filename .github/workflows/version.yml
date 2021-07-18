@@ -1,5 +1,12 @@
 name: Version
 
+# When a pull request is created, GitHub Actions will run on it. The workflow will
+#
+# 1. Check if the pull request title is conventional.
+# 2. Determine what the new version should be.
+# 3. Suggest corrections to the version of the application in the pull request, if necessary.
+#
+
 on:
   workflow_dispatch:
   push:
@@ -36,7 +43,13 @@ jobs:
     - name: Set Up GitHub CLI
       run: gh auth login --with-token <<< '${{ secrets.GITHUB_TOKEN }}'
 
-    - run: pip install poetry
+    - name: Install Tools
+      run: pip install commitizen poetry
+
+    - id: squash-commit
+      run: gh pr view "$PR_URL" --json title,body,number --jq '"::set-output name=message::\(.title) (#\(.number))\n\n\(.body|sub("\n*$"; ""))"'
+
+    - run: echo 'squash-commit-message = "${{ steps.squash-commit.outputs.message }}"'
 
     - id: poetry
       run: echo "::set-output name=version::$(poetry version --short)"
